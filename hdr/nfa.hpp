@@ -36,7 +36,8 @@ public:
         states.push_back(start);
         states.push_back(accept);
       }
-
+      
+      void exportDot(const std::string& filename) const;
 };
 
 class NFAMatcher{

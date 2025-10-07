@@ -1,6 +1,8 @@
 ## Implementation of regex engine via NFA (using Thompson algorithm)
 
 - Supports `concatenation` `union (|)` `kleen closure (*)` `positive closure (+)`
+- Also gives the dot format of NFA
+- To get png from the dot format, `dot -Tpng nfa.dot -o nfa.png`
 
 ### Usage
 `make`: build the binary

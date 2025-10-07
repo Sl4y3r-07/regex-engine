@@ -13,6 +13,11 @@ int main() {
     regexEngine re;
     NFA nfa = re.compile(regex);
     bool isMatch = re.match(input);
-    std::cout<<isMatch<<std::endl;
+    
+    if(isMatch)
+       std::cout<<"Pattern Matched!!" << std::endl;
+    else 
+        std::cout<<"Wrong :(" << std::endl;
+    nfa.exportDot("nfa.dot");
     
 }

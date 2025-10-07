@@ -7,7 +7,7 @@
 #include <fstream>
 #include <string>
 #include <queue>
-
+#include <set>
 
 void State::addEpsilonTransition(State* s){
     epsilonTransitions.push_back(s);
@@ -120,6 +120,49 @@ bool NFAMatcher::matches(const NFA &nfa, const std::string &str){
 }
 
 
+void NFA::exportDot(const std::string& filename) const {
+    std::ofstream out(filename);
+    if (!out.is_open()) {
+        std::cerr << "Error opening file: " << filename << "\n";
+        return;
+    }
 
+    out << "digraph NFA {\n";
+    out << "rankdir=LR;\n"; 
+    out << "node [shape=circle];\n";
 
+    std::set<const State*> visited;
+    std::queue<const State*> q;
 
+    q.push(start);
+    visited.insert(start);
+
+    while (!q.empty()) {
+        const State* s = q.front();
+        q.pop();
+
+        if (s->is_accept) {
+            out << (uintptr_t)s << " [shape=doublecircle];\n";
+        }
+
+        for (State* es : s->epsilonTransitions) {  
+            out << (uintptr_t)s << " -> " << (uintptr_t)es << " [label=\"ε\"];\n";
+
+            if (visited.insert(es).second) 
+                 q.push(es);
+        }
+
+        for (auto& [c, states] : s->transitions) {
+            for (State* dest : states) {
+             out << (uintptr_t)s << " -> " << (uintptr_t)dest << " [label=\"" << c << "\"];\n";
+
+                if (visited.insert(dest).second) 
+                  q.push(dest);
+            }
+        }
+    }
+
+    out << "}\n";
+    out.close();
+    std::cout << "DOT file exported to " << filename << "\n";
+}
